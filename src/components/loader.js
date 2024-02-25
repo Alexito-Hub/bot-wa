@@ -1,11 +1,21 @@
 require("./config")
 const fs = require('fs')
-const util = require('util')
+const path = require('path');
 
 const { Json, removeAccents } = require('../../lib/functions')
-
 const { client, sms } = require('../../lib/simple')
 
+const commands = [];
+const commandFiles = fs.readdirSync(path.join(__dirname, '..', 'commands')).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const command = require(path.join(__dirname, '..', 'commands', file));
+    commands.push(command);
+}
+
+function getCommands(commandName) {
+    return commands.find(cmd => Array.isArray(cmd.command) && cmd.command.includes(commandName));
+}
 
 module.exports = async(sock, m, store) => {
     try {
@@ -13,10 +23,12 @@ module.exports = async(sock, m, store) => {
         v = await sms(sock, m)
 
         if (!m.body) return;
-        const prefix = global.prefix
-        const isCmd = m.body.startsWith(prefix)
+
+        const prefixes = global.prefix || ['#'];
+		const isCmd = m.body && prefixes.some(prefix => m.body.toLowerCase().startsWith(prefix.toLowerCase()));
         const command = isCmd ? removeAccents(m.body.slice(prefix.length)).trim().split(' ').shift().toLowerCase() : ''
-        
+
+		
         const args = m.body.trim().split(/ +/).slice(1)
         const q = args.join(' ')
         const senderNumber = m.sender.split('@')[0]
@@ -38,71 +50,62 @@ module.exports = async(sock, m, store) => {
         const isQuotedSticker = m.quoted ? (m.quoted.type === 'stickerMessage') : false
         const isQuotedAudio = m.quoted ? (m.quoted.type === 'audioMessage') : false
     
-        switch (command) {
-            
-            case 'zio':
-            v.reply('Hola, soy un bot creado con la Base de Zioo')
-            break
-            
-            default:
-			if (isOwner) {
-				if (v.body.startsWith('=>')) {
-					try {
-						await v.reply(Json(eval(q)))
-					} catch(e) {
-						await v.reply(String(e))
-					}
-				}
+        const hasCommandPrefix = m.body && prefixes.some(prefix => m.body.toLowerCase().startsWith(prefix.toLowerCase()));
+        const commandBody = hasCommandPrefix && m.body ? m.body.slice((prefixes.find(prefix => m.body.toLowerCase().startsWith(prefix.toLowerCase())) || '').length).trim() : (m.body || '').trim();
+        const [commandName, ...commandArgs] = commandBody.split(/ +/);
+
+        const commandInfo = getCommands(commandName.toLowerCase());
+        if (commandInfo) {
+            await commandInfo.execute(sock, m, { commandArgs, isOwner, getCommands, q, args });
+            return;
+        }
+
+
+        if (isOwner) {
+            if (v.body.startsWith('>')) {
+                if (q.trim().length > 0) {
+                    await v.reply('Procesando...');
+                    await v.reply(Json(eval(`try{${q}}catch(e){await v.reply(String(e))}`)));
+                } else {
+                    await v.reply('No hay nada que procesar.');
+                }
+            }
+			if (v.body.startsWith('<')) {
+                if (q.trim().length > 0) {
+                    await v.reply('Procesando...');
+                    await v.reply(Json(eval(`(async ()=>{try{${q}}catch(error){await v.reply(String(error))}})();`)))
+
+                } else {
+                    await v.reply('No hay nada que procesar.');
+                }
 			}
+
+		    if (v.body.startsWith('$')) {
+                if (q.trim().length > 0) {
+                    await v.reply('Procesando...');
+                    try {
+                        const { exec } = require('child_process');
+                        exec(q, (error, stdout, stderr) => {
+                            if (error) {
+                                sock.sendMessage(m.chat, {text:`${error.message}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}}, {quoted:m});
+                                return;
+                            }
+                            if (stderr) {
+                                sock.sendMessage(m.chat, {text:`${stderr}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}
+                                }, {quoted:m});
+                                return;
+                            }
+                            sock.sendMessage(m.chat, {text:`${stdout}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}}, {quoted:m});
+                        });
+                    } catch (e) {
+                        sock.sendMessage(m.chat, { text:`${e.message}`, contextInfo: { externalAdReply: {showAdAttribution: true, }}}, {quoted:m});
+                    }
+                } else {
+                    await v.reply('No hay nada que procesar.');
+                }
+    		}
         }
 
-        const messageTime = new Date()
-        const isGroup = m.isGroup;
-        const isPrivate = !m.isGroup;
-
-        // Colores para la consola
-        const colors = {
-            reset: "\x1b[0m",
-            bright: "\x1b[1m",
-            dim: "\x1b[2m",
-            underscore: "\x1b[4m",
-            blink: "\x1b[5m",
-            reverse: "\x1b[7m",
-            hidden: "\x1b[8m",
-            fgBlack: "\x1b[30m",
-            fgRed: "\x1b[31m",
-            fgGreen: "\x1b[32m",
-            fgYellow: "\x1b[33m",
-            fgBlue: "\x1b[34m",
-            fgMagenta: "\x1b[35m",
-            fgCyan: "\x1b[36m",
-            fgWhite: "\x1b[37m",
-            bgBlack: "\x1b[40m",
-            bgRed: "\x1b[41m",
-            bgGreen: "\x1b[42m",
-            bgYellow: "\x1b[43m",
-            bgBlue: "\x1b[44m",
-            bgMagenta: "\x1b[45m",
-            bgCyan: "\x1b[46m",
-            bgWhite: "\x1b[47m"
-        };
-
-        // Imprimir información del mensaje en la consola
-        console.log(colors.fgYellow + `[Message Number: ${m.pushName}]` + colors.reset);
-        console.log(colors.fgCyan + `[Message Type: ${m.type}]` + colors.reset);
-        console.log(colors.fgGreen + `[Message Content: ${m.body}]` + colors.reset);
-        console.log(colors.fgBlue + `[Message Time: ${messageTime}]` + colors.reset);
-
-        if (isCmd) {
-            console.log(colors.fgRed + `[Command Executed]` + colors.reset);
-            console.log(colors.fgBlue + `[Command Time: ${messageTime}]` + colors.reset);
-        }
-
-        if (isGroup) {
-            console.log(colors.fgMagenta + '[Group Message]' + colors.reset);
-        } else if (isPrivate) {
-            console.log(colors.fgMagenta + '[Private Message]' + colors.reset);
-        }
     } catch (e) {
         console.log(e)
     }    
