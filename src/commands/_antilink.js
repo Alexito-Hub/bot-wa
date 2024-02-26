@@ -17,16 +17,29 @@ module.exports = {
             groupConfig = new GroupConfig({ groupId });
         }
 
-        if (args[0] === 'on') {
-            groupConfig.antilink = true;
-            await groupConfig.save();
-            await sock.sendMessage(m.chat, { text: 'Anti-enlace habilitado para este grupo.' }, { quoted: m });
-        } else if (args[0] === 'off') {
-            groupConfig.antilink = false;
-            await groupConfig.save();
-            await sock.sendMessage(m.chat, { text: 'Anti-enlace deshabilitado para este grupo.' }, { quoted: m });
+        const enable = ['on', 'open', 'enable', 'habilitar'].includes(args[0]?.toLowerCase())
+        const disable = ['off', 'close', 'disable', 'deshabilitar'].includes(args[0]?.toLowerCase())
+
+
+        if (enable) {
+            if (groupConfig.antilink) {
+                await sock.sendMessage(m.chat, { text: 'El anti-enlace ya está habilitado en este grupo.' }, { quoted: m });
+            } else {
+                groupConfig.antilink = true;
+                await groupConfig.save();
+                await sock.sendMessage(m.chat, { text: 'Anti-enlace habilitado para este grupo.' }, { quoted: m });
+            }
+        } else if (disable) {
+            if (!groupConfig.antilink) {
+                await sock.sendMessage(m.chat, { text: 'El anti-enlace ya está deshabilitado en este grupo.' }, { quoted: m });
+            } else {
+                groupConfig.antilink = false;
+                await groupConfig.save();
+                await sock.sendMessage(m.chat, { text: 'Anti-enlace deshabilitado para este grupo.' }, { quoted: m });
+            }
         } else {
             await sock.sendMessage(m.chat, { text: 'Uso: !antienlace [on|off]' }, { quoted: m });
         }
+
     },
 };

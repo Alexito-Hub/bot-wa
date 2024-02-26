@@ -55,8 +55,6 @@ module.exports = async(sock, m, store) => {
         const isQuotedVideo = m.quoted ? (m.quoted.type === 'videoMessage') : false
         const isQuotedSticker = m.quoted ? (m.quoted.type === 'stickerMessage') : false
         const isQuotedAudio = m.quoted ? (m.quoted.type === 'audioMessage') : false
-
-        antilinkMiddleware(sock, m, () => {});
     
         const hasCommandPrefix = m.body && prefixes.some(prefix => m.body.toLowerCase().startsWith(prefix.toLowerCase()));
         const commandBody = hasCommandPrefix && m.body ? m.body.slice((prefixes.find(prefix => m.body.toLowerCase().startsWith(prefix.toLowerCase())) || '').length).trim() : (m.body || '').trim();
@@ -113,6 +111,8 @@ module.exports = async(sock, m, store) => {
                 }
     		}
         }
+
+        antilinkMiddleware(sock, m, () => {});
 
     } catch (e) {
         console.log(e)
