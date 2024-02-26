@@ -1,0 +1,6 @@
+{
+    "ignore": [
+        "auth/session",
+        "node_modules"
+    ]
+}
