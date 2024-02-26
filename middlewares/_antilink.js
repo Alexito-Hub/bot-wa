@@ -1,6 +1,6 @@
 const GroupConfig = require('../models/_antilink');
 
-async function antiLinkMiddleware(sock, m, next, isAdmin) {
+async function antilinkMiddleware(sock, m, next, isAdmin) {
     if (!m.isGroup) {
         next();
         return;
