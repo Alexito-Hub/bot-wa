@@ -13,7 +13,7 @@ async function antilinkMiddleware(sock, m, isMe, isAdmin, isBotAdmin) {
 
         if (containsLink) {
       
-                if (!isAdmin && !isMe && !isStaff) {
+                if (!isAdmin && !isMe) {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
                     v.reply("Enlaces no permitidos. Has sido eliminado.");
                 }
