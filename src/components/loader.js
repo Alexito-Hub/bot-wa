@@ -2,6 +2,7 @@ require("./config")
 
 const { Json, removeAccents } = require('../../lib/functions')
 const { client, sms } = require('../../lib/simple')
+const { fetchJson } = require('../../lib/utils')
 
 const antilinkMiddleware = require('../../middlewares/_antilink');
 
