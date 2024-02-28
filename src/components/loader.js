@@ -67,51 +67,54 @@ module.exports = async(sock, m, store) => {
             return;
         }
 
-
-        if (isOwner) {
-            if (v.body.startsWith('>')) {
-                if (q.trim().length > 0) {
-                    await v.reply('Procesando...');
-                    await v.reply(Json(eval(q)));
-                    
-                } else {
-                    await v.reply('No hay nada que procesar.');
-                }
-            }
-			if (v.body.startsWith('<')) {
-                if (q.trim().length > 0) {
-                    await v.reply('Procesando...');
-                    await v.reply(Json(eval(`(async ()=>{try{${q}}catch(error){await v.reply(String(error))}})();`)))
-                } else {
-                    await v.reply('No hay nada que procesar.');
-                }
-			}
-
-		    if (v.body.startsWith('$')) {
-                if (q.trim().length > 0) {
-                    await v.reply('Procesando...');
-                    try {
-                        const { exec } = require('child_process');
-                        exec(q, (error, stdout, stderr) => {
-                            if (error) {
-                                sock.sendMessage(m.chat, {text:`${error.message}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}}, {quoted:m});
-                                return;
-                            }
-                            if (stderr) {
-                                sock.sendMessage(m.chat, {text:`${stderr}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}
-                                }, {quoted:m});
-                                return;
-                            }
-                            sock.sendMessage(m.chat, {text:`${stdout}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}}, {quoted:m});
-                        });
-                    } catch (e) {
-                        sock.sendMessage(m.chat, { text:`${e.message}`, contextInfo: { externalAdReply: {showAdAttribution: true, }}}, {quoted:m});
+        switch (command) {
+            default:
+                if (isOwner) {
+                    if (v.body.startsWith('>')) {
+                        if (q.trim().length > 0) {
+                            await v.reply('Procesando...');
+                            await v.reply(Json(eval(q)));
+                            
+                        } else {
+                            await v.reply('No hay nada que procesar.');
+                        }
                     }
-                } else {
-                    await v.reply('No hay nada que procesar.');
+                    if (v.body.startsWith('<')) {
+                        if (q.trim().length > 0) {
+                            await v.reply('Procesando...');
+                            await v.reply(Json(eval(`(async ()=>{try{${q}}catch(error){await v.reply(String(error))}})();`)))
+                        } else {
+                            await v.reply('No hay nada que procesar.');
+                        }
+                    }
+        
+                    if (v.body.startsWith('$')) {
+                        if (q.trim().length > 0) {
+                            await v.reply('Procesando...');
+                            try {
+                                const { exec } = require('child_process');
+                                exec(q, (error, stdout, stderr) => {
+                                    if (error) {
+                                        sock.sendMessage(m.chat, {text:`${error.message}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}}, {quoted:m});
+                                        return;
+                                    }
+                                    if (stderr) {
+                                        sock.sendMessage(m.chat, {text:`${stderr}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}
+                                        }, {quoted:m});
+                                        return;
+                                    }
+                                    sock.sendMessage(m.chat, {text:`${stdout}`,contextInfo: {externalAdReply: {showAdAttribution: true,}}}, {quoted:m});
+                                });
+                            } catch (e) {
+                                sock.sendMessage(m.chat, { text:`${e.message}`, contextInfo: { externalAdReply: {showAdAttribution: true, }}}, {quoted:m});
+                            }
+                        } else {
+                            await v.reply('No hay nada que procesar.');
+                        }
+                    }
                 }
-    		}
         }
+
 
         antilinkMiddleware(sock, m, () => {});
 
