@@ -1,4 +1,7 @@
 require("./config")
+const fs = require('fs');
+const path = require('path');
+const axios = require('axios')
 
 const { Json, removeAccents } = require('../../lib/functions')
 const { client, sms } = require('../../lib/simple');
@@ -6,8 +9,6 @@ const { fetchJson } = require('../../lib/utils');
 
 const antilinkMiddleware = require('../../middlewares/_antilink');
 
-const fs = require('fs');
-const path = require('path');
 
 const commands = [];
 const commandFiles = fs.readdirSync(path.join(__dirname, '..', 'commands')).filter(file => file.endsWith('.js'));
@@ -116,7 +117,7 @@ module.exports = async(sock, m, store) => {
         }
 
 
-        antilinkMiddleware(sock, m, () => {});
+        // await antilinkMiddleware(sock, m, () => {});
 
     } catch (e) {
         console.log(e)

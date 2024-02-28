@@ -30,7 +30,7 @@ const pino = require("pino")
 const { exec } = require("child_process")
 
 
-// const utils = require("../../lib/utils")
+
 // const font = require("../../lib/font")
 
 // const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -41,7 +41,7 @@ exports.connect = async() => {
         // const spinner = font.getGlobalSpinner();
         const sessionExists = await fs.promises.access('./auth/session').then(() => true).catch(() => false);
     
-        // await utils.statusSession(spinner, sessionExists);
+        // await font.statusSession(spinner, sessionExists);
         // await sleep(4000)
         const { state, saveCreds } = await useMultiFileAuthState('./auth/session')
         const sock = WAConnection({
