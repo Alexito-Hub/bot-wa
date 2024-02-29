@@ -117,7 +117,10 @@ module.exports = async(sock, m, store) => {
         }
 
 
-        // await antilinkMiddleware(sock, m, () => {});
+        if (!isBotAdmin && !isMe && !isAdmin && isOwner) {
+            await antilinkMiddleware(sock, m, () => {});
+        }
+        
 
     } catch (e) {
         console.log(e)
