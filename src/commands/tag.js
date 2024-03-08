@@ -43,16 +43,4 @@ module.exports = {
     },
 };
 
-const getFileBuffer = async (mediaKey, mediaType) => {
-    try {
-        const stream = await sock.downloadMediaMessage(m, mediaType);
-        const buffers = [];
-        for await (const chunk of stream) {
-            buffers.push(chunk);
-        }
-        return Buffer.concat(buffers);
-    } catch (error) {
-        console.error('Error al obtener el buffer:', error);
-        return null;
-    }
-};
+

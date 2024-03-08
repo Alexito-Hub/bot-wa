@@ -1,7 +1,7 @@
 module.exports = {
     name: 'kick',
     description: 'Expulsa a un miembro del grupo',
-    command: ['remove', 'hakai', 'largate'],
+    command: ['remove', 'hakai', 'largate', 'kick'],
     
     async execute(sock, m, args, isBotAdmin) {
         try {

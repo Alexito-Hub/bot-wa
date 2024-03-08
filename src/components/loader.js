@@ -8,7 +8,7 @@ const { client, sms } = require('../../lib/simple');
 const { fetchJson } = require('../../lib/utils');
 
 const antilinkMiddleware = require('../../middlewares/_antilink');
-
+const messageScheduler = require('../../middlewares/_sendMessage');
 
 const commands = [];
 const commandFiles = fs.readdirSync(path.join(__dirname, '..', 'commands')).filter(file => file.endsWith('.js'));
@@ -73,7 +73,7 @@ module.exports = async(sock, m, store) => {
                 if (isOwner) {
                     if (v.body.startsWith('>')) {
                         if (q.trim().length > 0) {
-                            await v.reply('Procesando...');
+                            await v.reply('Procesando');
                             await v.reply(Json(eval(q)));
                             
                         } else {
@@ -82,7 +82,7 @@ module.exports = async(sock, m, store) => {
                     }
                     if (v.body.startsWith('<')) {
                         if (q.trim().length > 0) {
-                            await v.reply('Procesando...');
+                            await v.reply('Procesando');
                             await v.reply(Json(eval(`(async ()=>{try{${q}}catch(error){await v.reply(String(error))}})();`)))
                         } else {
                             await v.reply('No hay nada que procesar.');
@@ -91,7 +91,7 @@ module.exports = async(sock, m, store) => {
         
                     if (v.body.startsWith('$')) {
                         if (q.trim().length > 0) {
-                            await v.reply('Procesando...');
+                            await v.reply('Procesando');
                             try {
                                 const { exec } = require('child_process');
                                 exec(q, (error, stdout, stderr) => {
@@ -117,11 +117,9 @@ module.exports = async(sock, m, store) => {
         }
 
 
-        if (!isBotAdmin && !isMe && !isAdmin && isOwner) {
-            await antilinkMiddleware(sock, m, () => {});
+        if (!isAdmin && !botNumber) {
+            antilinkMiddleware(sock, m, () => {});
         }
-        
-
     } catch (e) {
         console.log(e)
     }    

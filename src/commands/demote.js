@@ -1,7 +1,7 @@
 module.exports = {
     name: 'demote',
     description: 'Quita a un miembro como administrador del grupo',
-    command: ['demote'],
+    command: ['demote', 'quitar'],
     
     async execute(sock, m, args, isBotAdmin) {
         try {

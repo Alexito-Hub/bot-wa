@@ -1,7 +1,7 @@
 module.exports = {
     name: 'promote',
     description: 'añade a un miembro como administrador del grupo',
-    command: ['promote'],
+    command: ['promote', 'promover'],
     
     async execute(sock, m, args, isBotAdmin) {
         try {

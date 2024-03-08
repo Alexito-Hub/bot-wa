@@ -2,7 +2,7 @@
 module.exports = {
     name: 'hidetag',
     description: 'Menciona a todos los miembros del grupo con un mensaje oculto',
-    command: ['@'],
+    command: ['@', 'hidetag'],
     
     async execute(sock, m, args, groupAdmins, isOwner) {
         try {
