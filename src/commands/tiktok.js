@@ -65,7 +65,7 @@ module.exports = {
                 try {
                     await sock.sendMessage(m.chat, {
                         audio: { url: aud },
-                        mimetype: 'audio/mpeg',
+                        mimetype: 'audio/mp4',
                         ppt: true,
                     }, { quoted: m });
                 } catch {
