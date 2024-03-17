@@ -59,6 +59,7 @@ exports.connect = async() => {
         // await font.statusSession(spinner, sessionExists);
         // await sleep(4000)
         const { state, saveCreds } = await useMultiFileAuthState('./auth/session')
+        const { version } = await fetchLatestBaileysVersion()
         const sock = makeWASocket({
             version,
             logger: P,
