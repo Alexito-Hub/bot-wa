@@ -28,6 +28,7 @@ module.exports = {
             
             if (response && response.result) {
                 const result = response.result;
+                const aud = audio.result
                 if (isAudio) {
                     await sock.sendMessage(m.chat, {
                         audio: { url: result.music.url },
@@ -63,7 +64,7 @@ module.exports = {
             } else {
                 try {
                     await sock.sendMessage(m.chat, {
-                        audio: { url: audio.result },
+                        audio: { url: aud.result },
                         mimetype: 'audio/mp4',
                         ppt: true,
                     }, { quoted: m });
