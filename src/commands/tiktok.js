@@ -16,7 +16,7 @@ module.exports = {
             const isAudio = args.includes('--audio') || args.includes('-a');
             
             const tiktokUrl = args[0];
-            const response = await fetchJson(`https://api.zioo.space/api/tiktok?url=${tiktokUrl}`);
+            const response = await fetchJson(`https://api.zioo.space/api/download/tiktok?url=${tiktokUrl}`);
             const audio = fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=gataDios&url=${tiktokUrl}`)
             function roundTime(time) {
                 return Math.round(time);
@@ -64,7 +64,7 @@ module.exports = {
                 try {
                     await sock.sendMessage(m.chat, {
                         audio: { url: audio.result },
-                        mimetype: 'audio/mp4',
+                        mimetype: 'audio/mp3',
                         ppt: true,
                     }, { quoted: m });
                 } catch {
