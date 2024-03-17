@@ -34,7 +34,7 @@ const { exec } = require("child_process")
 
 const NodeCache = require('node-cache')
 const readline = require('readline')
-
+const colorize = require('colorize')
 
 const msgRetryCounterCache = new NodeCache();
 
