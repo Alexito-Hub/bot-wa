@@ -18,7 +18,7 @@
 
 require("../database")
 const {
-     default: WAConnection,
+     default: makeWASocket,
      DisconnectReason,
      makeInMemoryStore,
      useMultiFileAuthState,
