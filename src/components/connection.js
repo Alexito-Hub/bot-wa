@@ -20,8 +20,11 @@ require("../database")
 const {
      default: makeWASocket,
      DisconnectReason,
+     Browsers,
      makeInMemoryStore,
      useMultiFileAuthState,
+     fetchLatestBaileysVersion,
+     makeCacheableSignalKeyStore,
      getContentType,
  } = require("@whiskeysockets/baileys")
 
