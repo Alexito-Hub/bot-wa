@@ -26,8 +26,6 @@ const getGreeting = () => {
     return { greeting, dailyMessage, time: moment().tz('America/Lima').format('h:mm A') };
 };
 
-const commandsFolder = './src/commands'; 
-
 fs.readdir(commandsFolder, (err, files) => {
     if (err) {
         console.error('Error al leer la carpeta:', err);
@@ -46,7 +44,6 @@ module.exports = {
 
             const nodeVersion = process.version;
             const osType = os.type();
-            const folderCount = countFoldersInCommands();
             const dbStats = await mongoose.connection.db.stats();
 
             const user = m.sender.split('@')[0];
