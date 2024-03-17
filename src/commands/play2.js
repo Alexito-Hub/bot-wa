@@ -14,7 +14,7 @@ module.exports = {
             await sock.sendMessage(m.chat, { react: { text: '🕛', key: m.key } });
             const searchText = args.join(' ');
 
-            const searchResults = await fetchJson(`https://api.zioo.space/api/download/ytdl-search?key=zio&q=${searchText}`);
+            const searchResults = await fetchJson(`https://api.zioo.space/api/download/ytdl-search?url=${searchText}`);
 
             if (!searchResults || !searchResults.result || searchResults.result.length === 0) {
                 await sock.sendMessage(m.chat, { text: 'No se encontraron resultados.' }, { quoted: m });
@@ -34,7 +34,7 @@ module.exports = {
 *implement api@zio*`
             }, {quoted: m})
             await sock.sendMessage(m.chat, { audio: { 
-                url: `https://api.zioo.space/api/ytdl-mp3?key=zio&q=${result.url}` }, 
+                url: `https://api.zioo.space/api/download/ytdl-mp3?url=${result.url}` }, 
                 mimetype: 'audio/mpeg', 
                 contextInfo:{
                     externalAdReply:{

@@ -14,14 +14,14 @@ module.exports = {
             
             await sock.sendMessage(m.chat, { react: { text: '🕛', key: m.key } });
             const searchText = args.join(' ');
-            const searchResults = await fetchJson(`https://api.zioo.space/api/ytdl-search?key=zio&q=${searchText}`);
+            const searchResults = await fetchJson(`https://api.zioo.space/api/download/ytdl-search?url=${searchText}`);
             
             if (!searchResults || !searchResults.result || searchResults.result.length === 0) {
                 await sock.sendMessage(m.chat, { text: 'No se encontraron resultados.' }, { quoted: m });
                 return;
             }
             const result = searchResults.result[0]
-            await sock.sendMessage(m.chat, { video: { url: `https://api.zioo.space/api/ytdl-mp4?key=zio&q=${result.url}`},
+            await sock.sendMessage(m.chat, { video: { url: `https://api.zioo.space/api/download/ytdl-mp4?url=${result.url}`},
                 mimetype: 'video/mp4',
                 caption:`ㅤ *⋯⋯ YOUTUBE MP4 ⋯⋯*
  ▢ *Título:* ${result.title}
