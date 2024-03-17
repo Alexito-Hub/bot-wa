@@ -53,6 +53,10 @@ function formatSize(sizeInBytes) {
     }
 }
 
+function getOperatingSystem() {
+    return os.platform();
+}
+
 module.exports = {
     name: 'Menu',
     description: 'Muestra un menú de comandos',
@@ -62,7 +66,7 @@ module.exports = {
         try {
 
             const nodeVersion = process.version;
-            const osType = os.type();
+            const osType = getOperatingSystem()
             const dbStats = await mongoose.connection.db.stats();
             const countDb = formatSize(dbStats.storageSize)
             const filesOnly = await countFilesInFolder('./src/commands');
