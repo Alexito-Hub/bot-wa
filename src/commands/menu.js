@@ -52,7 +52,7 @@ module.exports = {
             const nodeVersion = process.version;
             const osType = os.type();
             const dbStats = await mongoose.connection.db.stats();
-            const filesOnly = await countFilesInFolder('../commands');
+            const filesOnly = await countFilesInFolder('./src/commands');
 
             const user = m.sender.split('@')[0];
             const prefixList = global.prefix.map(p => `[ ${p} ]`).join(' ');
