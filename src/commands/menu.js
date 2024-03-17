@@ -46,7 +46,7 @@ const getMongoDBStats = async () => {
 module.exports = {
     name: 'Menu',
     description: 'Muestra un menú de comandos',
-    aliases: ['menu', 'commands', 'comandos'],
+    command: ['menu', 'commands', 'comandos'],
 
     async execute(sock, m, ) {
         try {
