@@ -17,7 +17,7 @@ module.exports = {
             
             const tiktokUrl = args[0];
             const response = await fetchJson(`https://api.zioo.space/api/download/tiktok?url=${tiktokUrl}`);
-            const audio = fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=gataDios&url=${tiktokUrl}`)
+            const audio = await fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=gataDios&url=${tiktokUrl}`)
             function roundTime(time) {
                 return Math.round(time);
             }
