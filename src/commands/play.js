@@ -3,7 +3,7 @@ const { fetchJson } = require('../../lib/utils')
 module.exports = {
     name: 'play',
     description: 'Descarga videos de YouTube',
-    command: ['ytplay', 'ytvideo', 'playvideo'],
+    command: ['play', 'ytplay', 'ytvideo', 'playvideo'],
 
     async execute(sock, m, args) {
         try {
