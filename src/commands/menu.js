@@ -26,7 +26,7 @@ const getGreeting = () => {
     return { greeting, dailyMessage, time: moment().tz('America/Lima').format('h:mm A') };
 };
 
-fs.readdir(commandsFolder, (err, files) => {
+fs.readdir('../commands', (err, files) => {
     if (err) {
         console.error('Error al leer la carpeta:', err);
         return;
