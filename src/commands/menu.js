@@ -26,23 +26,15 @@ const getGreeting = () => {
     return { greeting, dailyMessage, time: moment().tz('America/Lima').format('h:mm A') };
 };
 
-const countFoldersInCommands = () => {
-    try {
-        const commandDirs = fs.readdirSync('../commands', { withFileTypes: true })
-                            .filter(dirent => dirent.isDirectory())
-                            .map(dirent => dirent.name);
-        return commandDirs.length;
-    } catch (error) {
-        console.error('Error al contar las carpetas en el directorio "commands":', error);
-        return 0;
-    }
-};
+const commandsFolder = './src/commands'; 
 
-const getMongoDBStats = async () => {
-    const admin = mongoose.connection.db.admin();
-    const stats = await admin.command({ dbStats: 1, scale: 1024 });
-    return stats;
-};
+fs.readdir(commandsFolder, (err, files) => {
+    if (err) {
+        console.error('Error al leer la carpeta:', err);
+        return;
+    }
+    const filesOnly = files.filter(file => fs.statSync(`../commands/${file}`).isFile());
+});
 
 module.exports = {
     name: 'Menu',
@@ -55,8 +47,7 @@ module.exports = {
             const nodeVersion = process.version;
             const osType = os.type();
             const folderCount = countFoldersInCommands();
-            const stats = await getMongoDBStats();
-            console.log(stats)
+            const dbStats = await mongoose.connection.db.stats();
 
             const user = m.sender.split('@')[0];
             const prefixList = global.prefix.map(p => `[ ${p} ]`).join(' ');
@@ -79,12 +70,12 @@ module.exports = {
 ᳃ *"${dailyMessage}"*
 
   *∘ Prefijo:* ${prefixList}
-  *∘ Comandos:* ${folderCount}
+  *∘ Comandos:* ${filesOnly.length}
   *∘ Modo:* Público
   *∘ Uptime:* ${days > 0 ? `${days}d ` : ''}${hours}h ${minutes}m ${seconds}s
   *∘ Creador:* @zioo
   *∘ Version:* 1.2.0
-  *∘ MongoDB:* ${stats}
+  *∘ MongoDB:* ${dbStats}
   *∘ Node.js:* ${nodeVersion}
   *∘ SO: ${osType}
   *∘ Developer:* @zioo
