@@ -8,7 +8,8 @@ const { client, sms } = require('../../lib/simple');
 const { fetchJson } = require('../../lib/utils');
 
 const antilinkMiddleware = require('../../middlewares/_antilink');
-const messageScheduler = require('../../middlewares/_sendMessage');
+const chatbotMiddleware = require('../../middlewares/_sendMessage.js');
+const teachCommand = require('../../middlewares/_develop.js');
 
 const commands = [];
 const commandFiles = fs.readdirSync(path.join(__dirname, '..', 'commands')).filter(file => file.endsWith('.js'));
@@ -116,6 +117,8 @@ module.exports = async(sock, m, store) => {
                 }
         }
 
+        chatbotMiddleware(sock, m, () => {})
+        teachCommand(sock, m, args, () => {})
 
         if (!isAdmin && !botNumber) {
             antilinkMiddleware(sock, m, () => {});
