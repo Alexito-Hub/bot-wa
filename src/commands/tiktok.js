@@ -62,9 +62,9 @@ module.exports = {
                 await sock.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
             } else {
                 try {
-                    const aud = fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=gataDios&url=${tiktokUrl}`)
+                    const audio = fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=gataDios&url=${tiktokUrl}`)
                     await sock.sendMessage(m.chat, {
-                        audio: { url: aud.result },
+                        audio: { url: audio.result },
                         mimetype: 'audio/mp4',
                         ppt: true,
                     }, { quoted: m });
