@@ -80,9 +80,9 @@ exports.connect = async() => {
         sock.ev.on("creds.update", saveCreds);
 
         if (!sock.authState.creds.registered) {
-            const phoneNumber = await question(colorize.bold("Enter your active whatsapp number: "));
+            const phoneNumber = await question("Enter your active whatsapp number: ");
             const code = await sock.requestPairingCode(phoneNumber);
-            console.log(colorize.bold(`pairing with this code: ${code}`));
+            console.log(`pairing with this code: ${code}`);
         }
         
         sock.ev.on("connection.update", m => {
