@@ -41,6 +41,18 @@ function countFilesInFolder(folderPath) {
         });
     });
 }
+
+function formatSize(sizeInBytes) {
+    const KB = 1024;
+    const MB = KB * 1024;
+
+    if (sizeInBytes >= MB) {
+        return `${(sizeInBytes / MB).toFixed(2)} MB`;
+    } else {
+        return `${(sizeInBytes / KB).toFixed(0)} KB`;
+    }
+}
+
 module.exports = {
     name: 'Menu',
     description: 'Muestra un menú de comandos',
@@ -52,6 +64,7 @@ module.exports = {
             const nodeVersion = process.version;
             const osType = os.type();
             const dbStats = await mongoose.connection.db.stats();
+            const countDb = formatSize(dbStats.storageSize)
             const filesOnly = await countFilesInFolder('./src/commands');
 
             const user = m.sender.split('@')[0];
@@ -80,9 +93,9 @@ module.exports = {
   *∘ Uptime:* ${days > 0 ? `${days}d ` : ''}${hours}h ${minutes}m ${seconds}s
   *∘ Creador:* @zioo
   *∘ Version:* 1.2.0
-  *∘ MongoDB:* ${dbStats}
+  *∘ MongoDB:* ${countDb}
   *∘ Node.js:* ${nodeVersion}
-  *∘ SO: ${osType}
+  *∘ SO:* ${osType}
   *∘ Developer:* @zioo
   *∘ GitHub:* https://github.com/Alexito-Hub/ziooo-base
   *∘ Api Web:* https://api.zioo.space
