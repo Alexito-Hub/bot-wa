@@ -29,7 +29,20 @@ const fs = require("fs")
 const pino = require("pino")
 const { exec } = require("child_process")
 
+const readline = require('readline')
 
+
+const msgRetryCounterCache = new NodeCache();
+
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+});
+const question = text => new Promise(resolve => rl.question(text, resolve));
+
+const P = require("pino")({
+	level: "silent",
+});
 
 // const font = require("../../lib/font")
 
@@ -45,12 +58,27 @@ exports.connect = async() => {
         // await font.statusSession(spinner, sessionExists);
         // await sleep(4000)
         const { state, saveCreds } = await useMultiFileAuthState('./auth/session')
-        const sock = WAConnection({
-            logger : pino({ level : "silent" }),
-            auth : state,
-            browser: ["Base Ziooo", "Firefox", "3.0.0"],
-            printQRInTerminal: true
-        })
+        const sock = makeWASocket({
+            version,
+            logger: P,
+            printQRInTerminal: false,
+            browser: Browsers.ubuntu("Chrome"),
+            auth: {
+                creds: state.creds,
+                keys: makeCacheableSignalKeyStore(state.keys, P),
+            },
+            msgRetryCounterCache,
+        });
+
+        store?.bind(sock.ev);
+
+        sock.ev.on("creds.update", saveCreds);
+
+        if (!sock.authState.creds.registered) {
+            const phoneNumber = await question(colorize.bold("Enter your active whatsapp number: "));
+            const code = await sock.requestPairingCode(phoneNumber);
+            console.log(colorize.bold(`pairing with this code: ${code}`));
+        }
         
         sock.ev.on("connection.update", m => {
             const { connection, lastDisconnect } = m

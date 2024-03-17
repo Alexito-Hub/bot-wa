@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const os = require('os')
 const fs = require('fs')
 
-const { fetchJson } = require('../../lib/utils');
 
 const getGreeting = () => {
     const currentHour = moment().tz('America/Lima').format('H');
@@ -28,14 +27,12 @@ const getGreeting = () => {
 
 function countFilesInFolder(folderPath) {
     return new Promise((resolve, reject) => {
-        // Leer el contenido de la carpeta
         fs.readdir(folderPath, (err, files) => {
             if (err) {
                 reject(err);
                 return;
             }
 
-            // Filtrar solo archivos, no directorios
             const filesOnly = files.filter(file => fs.statSync(`${folderPath}/${file}`).isFile());
             resolve(filesOnly.length);
         });
@@ -132,20 +129,3 @@ Obten información basica del bot con !info
         }
     }
 };
-
-/*
-await sock.sendMessage(m.chat, {
-                text,
-                contextInfo: {
-                    remoteJid:m.chat,
-                    mentionedJid: [m.sender],
-                    externalAdReply: {
-                        title: `Hora: ${time}`,
-                        sourceUrl: `https://whatsapp.com/channel/0029VaBQgoGLdQehR6vmiY42`,
-                        renderLargerThumbnail: false,
-                        mediaType: 1,
-                        thumbnailUrl: 'https://telegra.ph/file/ae78c6675b0f413a5c635.jpg'
-                    }
-                }
-            });
-            */
