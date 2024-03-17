@@ -27,7 +27,7 @@ const getGreeting = () => {
 
 const countFoldersInCommands = () => {
     try {
-        const commandDirs = fs.readdirSync('./src/commands', { withFileTypes: true })
+        const commandDirs = fs.readdirSync('../commands', { withFileTypes: true })
                             .filter(dirent => dirent.isDirectory())
                             .map(dirent => dirent.name);
         return commandDirs.length;
@@ -82,9 +82,9 @@ module.exports = {
   *∘ Uptime:* ${days > 0 ? `${days}d ` : ''}${hours}h ${minutes}m ${seconds}s
   *∘ Creador:* @zioo
   *∘ Version:* 1.2.0
-  *∘ MongoDB: ${stats}
-  *∘ Node.js: ${nodeVersion}
-  *∘ Sistema Operativo: ${osType}
+  *∘ MongoDB:* ${stats}
+  *∘ Node.js:* ${nodeVersion}
+  *∘ SO: ${osType}
   *∘ Developer:* @zioo
   *∘ GitHub:* https://github.com/Alexito-Hub/ziooo-base
   *∘ Api Web:* https://api.zioo.space
