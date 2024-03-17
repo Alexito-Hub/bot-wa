@@ -64,7 +64,7 @@ module.exports = {
                 try {
                     const aud = fetchJson(`https://api.lolhuman.xyz/api/tiktokmusic?apikey=gataDios&url=${tiktokUrl}`)
                     await sock.sendMessage(m.chat, {
-                        audio: { url: result.music.url },
+                        audio: { url: aud.result },
                         mimetype: 'audio/mp4',
                         ppt: true,
                     }, { quoted: m });

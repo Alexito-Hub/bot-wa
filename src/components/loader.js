@@ -123,4 +123,12 @@ module.exports = async(sock, m, store) => {
     } catch (e) {
         console.log(e)
     }    
-}    
+}
+
+let file = require.resolve(__filename)
+fs.watchFile(file, () => {
+	fs.unwatchFile(file)
+	console.log(`Update ${__filename}`)
+	delete require.cache[file]
+	require(file)
+})
