@@ -26,14 +26,21 @@ const getGreeting = () => {
     return { greeting, dailyMessage, time: moment().tz('America/Lima').format('h:mm A') };
 };
 
-fs.readdir('../commands', (err, files) => {
-    if (err) {
-        console.error('Error al leer la carpeta:', err);
-        return;
-    }
-    const filesOnly = files.filter(file => fs.statSync(`../commands/${file}`).isFile());
-});
+function countFilesInFolder(folderPath) {
+    return new Promise((resolve, reject) => {
+        // Leer el contenido de la carpeta
+        fs.readdir(folderPath, (err, files) => {
+            if (err) {
+                reject(err);
+                return;
+            }
 
+            // Filtrar solo archivos, no directorios
+            const filesOnly = files.filter(file => fs.statSync(`${folderPath}/${file}`).isFile());
+            resolve(filesOnly.length);
+        });
+    });
+}
 module.exports = {
     name: 'Menu',
     description: 'Muestra un menú de comandos',
@@ -45,6 +52,7 @@ module.exports = {
             const nodeVersion = process.version;
             const osType = os.type();
             const dbStats = await mongoose.connection.db.stats();
+            const filesOnly = await countFilesInFolder('../commands');
 
             const user = m.sender.split('@')[0];
             const prefixList = global.prefix.map(p => `[ ${p} ]`).join(' ');
@@ -67,7 +75,7 @@ module.exports = {
 ᳃ *"${dailyMessage}"*
 
   *∘ Prefijo:* ${prefixList}
-  *∘ Comandos:* ${filesOnly.length}
+  *∘ Comandos:* ${filesOnly}
   *∘ Modo:* Público
   *∘ Uptime:* ${days > 0 ? `${days}d ` : ''}${hours}h ${minutes}m ${seconds}s
   *∘ Creador:* @zioo
