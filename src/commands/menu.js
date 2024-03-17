@@ -1,6 +1,7 @@
 const moment = require('moment-timezone');
 const mongoose = require('mongoose');
 const os = require('os')
+const fs = require('fs')
 
 const { fetchJson } = require('../../lib/utils');
 
@@ -55,6 +56,7 @@ module.exports = {
             const osType = os.type();
             const folderCount = countFoldersInCommands();
             const stats = await getMongoDBStats();
+            console.log(stats)
 
             const user = m.sender.split('@')[0];
             const prefixList = global.prefix.map(p => `[ ${p} ]`).join(' ');
